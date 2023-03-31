@@ -1,0 +1,10 @@
+// el punto viene debajo y esta oculta  y presente y se puede leer
+
+{
+    "presets": [
+        "@babel/preset-env"
+    ],
+    "plugins": [
+        "@babel/plugin-transform-runtime"
+    ]
+}
