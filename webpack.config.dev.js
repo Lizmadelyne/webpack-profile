@@ -2,11 +2,11 @@ const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = {
+    //entry nos permite decir el punto de entrada de la app
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -14,7 +14,7 @@ module.exports = {
         assetModuleFilename: 'assets/images/[hash][ext][query]',
     },
     mode: 'development',
-    watch: true,
+    //watch: true,
     resolve: {
         extensions: ['.js'],
         alias:{
@@ -31,20 +31,21 @@ module.exports = {
             {
                 test: /\.m?js$/,
                 exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader'
+                 use: {
+                 loader: 'babel-loader'
                 }
             },
             {
-                test:/\.css|.styl$/i,
-                use:[MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'stylus-loader'
+                test: /\.css|.styl$/i,
+                use: [
+                  MiniCssExtractPlugin.loader,
+                  'css-loader',
+                  'stylus-loader'
                 ],
             },
             {
-                test:/\.png/,
-                type:'asset/resource'
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                type: 'asset/resource'
 
             },
            {
@@ -53,10 +54,10 @@ module.exports = {
               loader: 'url-loader',
               options: {
                 limit: 10000,
-                mimetype: "application/font-woff",
-                name: "[name].[contenthash].[ext]",
-                outputPath: "./assets/fonts/",
-                publicPath: "../assets/fonts/",
+                mimetype: 'application/font-woff',
+                name: '[name].[contenthash].[ext]',
+                outputPath: './assets/fonts/',
+                publicPath: '../assets/fonts/',
                 esModule: false,
               },
            }
@@ -65,24 +66,29 @@ module.exports = {
     },
     //aqui empieza los plugins
     plugins: [
-        new HtmlWebPackPlugin({
-            inject: true,
-            template: './public/index.html',
-            filename: './index.html'
+        new HtmlWebpackPlugin({
+          inject: true,
+          template: './public/index.html',
+          filename: './index.html'
         }),
         new MiniCssExtractPlugin({
-            filename:'assets/[name].[contenthash].css'
+          filename: 'assets/[name][contenthash].css'
         }),
-        new CopyPlugin({
-            patterns:[
-                {
-                from: path.resolve(__dirname, "src", "assets/images"),
-                to:"assets/images"
-                }
-            ]
-            }),
-            new Dotenv(),
-            ],
-         
-
-}
+        new CopyWebpackPlugin({
+          patterns: [
+            {
+              from: path.resolve(__dirname, 'src/', 'assets/images'),
+              to: 'assets/images'
+            }
+          ]
+        }),
+        new DotEnv(),
+        // new BundleAnalyzerPlugin()
+      ],
+      devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        historyApiFallback: true,
+        port: 9000
+      }
+    }
